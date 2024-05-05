@@ -1,0 +1,5 @@
+{
+  "NEXTCLOUD_USERNAME": "",
+  "NEXTCLOUD_PASSWORD": "",
+  "NEXTCLOUD_HOST_URL": "https://<your nextcloud host>"
+}
