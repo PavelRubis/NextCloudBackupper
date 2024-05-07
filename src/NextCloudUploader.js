@@ -1,52 +1,46 @@
-import Client, {
-  CommandResultMetaData,
+import {
+  Client,
+  Server,
   CommandStatus,
   UploadFilesCommand,
-  SourceTargetFileNames,
 } from "nextcloud-node-client";
 import config from "config";
-import logger from "./logger";
+import { logger } from "./logger.js";
 
-class NextCloudUploader {
+export class NextCloudUploader {
   constructor() {
     const server = new Server({
       basicAuth: {
-        password: config.get("NEXTCLOUD_PASSWORD"),
-        username: config.get("NEXTCLOUD_USERNAME"),
+        password:
+          process.env.NEXTCLOUD_PASSWORD || config.get("NEXTCLOUD_PASSWORD"),
+        username:
+          process.env.NEXTCLOUD_USERNAME || config.get("NEXTCLOUD_USERNAME"),
       },
-      url: config.get("NEXTCLOUD_HOST_URL"),
+      url: process.env.NEXTCLOUD_URL || config.get("NEXTCLOUD_URL"),
     });
     this.client = new Client(server);
   }
 
-  uploadFile(sourceFileName, targetFileName) {
-    (async () => {
-      const client = new Client();
+  async uploadFile(sourceFileName, targetFileName) {
+    const files = [
+      {
+        sourceFileName,
+        targetFileName,
+      },
+    ];
 
-      // create a list of files to upload
-      const files = [
-        {
-          sourceFileName,
-          targetFileName,
-        },
-        // add even more files ...
-      ];
+    const uc = new UploadFilesCommand(this.client, { files });
+    await uc.execute();
+    const uploadResult = uc.getResultMetaData();
 
-      // create the command object
-      const uc = new UploadFilesCommand(client, { files });
-
-      // start the upload synchronously
-      await uc.execute();
-
-      // use the result to do the needful
-      const uploadResult = uc.getResultMetaData();
-
-      if (uc.getStatus() === CommandStatus.success) {
-        logger.info(uploadResult.messages);
-        logger.info(uc.getBytesUploaded());
-      } else {
-        logger.error(uploadResult.errors);
-      }
-    })();
+    this.uploadStatus = uc.getStatus();
+    if (this.uploadStatus === CommandStatus.success) {
+      logger.info(
+        "File uploaded successfully with messages: " + uploadResult.messages
+      );
+      logger.info(uc.getBytesUploaded() + " total bytes uploaded to NextCloud");
+    } else {
+      logger.error("Errors during file upload: " + uploadResult.errors);
+    }
   }
 }

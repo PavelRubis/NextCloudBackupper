@@ -1,4 +1,3 @@
-// require modules
 import fs from "fs";
 import archiver from "archiver";
 import { logger } from "./logger.js";
@@ -6,7 +5,7 @@ import { logger } from "./logger.js";
 export class Archiver {
   #onStreamClose(archive) {
     this.archivedSuccess = true;
-    logger.info(archive.pointer() + " total bytes");
+    logger.info(archive.pointer() + " total bytes archived");
     logger.info(
       "archiver has been finalized and the output file descriptor has closed."
     );
@@ -14,7 +13,7 @@ export class Archiver {
 
   #onArchiveError(err) {
     this.archivedSuccess = false;
-    logger.error(err);
+    logger.error("Errors during archiving: " + err);
   }
 
   archiveDirectory(directoryPath, archivePathAndFileName) {

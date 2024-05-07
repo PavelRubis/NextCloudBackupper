@@ -12,6 +12,7 @@
   "license": "MIT",
   "dependencies": {
     "archiver": "^7.0.1",
+    "config": "^3.3.11",
     "nextcloud-node-client": "^1.8.1",
     "pino": "^9.0.0"
   },
