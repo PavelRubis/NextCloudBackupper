@@ -5,7 +5,7 @@ import {
   UploadFilesCommand,
 } from "nextcloud-node-client";
 import config from "config";
-import { logger } from "./Logger.js";
+import { logger } from "./logger.js";
 
 export class NextCloudUploader {
   constructor() {

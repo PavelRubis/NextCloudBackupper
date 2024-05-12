@@ -1,6 +1,6 @@
 import fs from "fs";
 import archiver from "archiver";
-import { logger } from "./Logger.js";
+import { logger } from "./logger.js";
 
 export class Archiver {
   #onStreamClose(archive) {

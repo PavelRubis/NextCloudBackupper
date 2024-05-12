@@ -1,6 +1,6 @@
 import { Archiver } from "./Archiver.js";
 import { NextCloudUploader } from "./NextCloudUploader.js";
-import { logger } from "./Logger.js";
+import { logger } from "./logger.js";
 
 let dirToUploadPath = "";
 process.argv.forEach((arg) => {
